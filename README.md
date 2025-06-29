@@ -98,3 +98,4 @@ By default, Ollama’s API does **not** allow cross-origin requests from browser
 
 1. An improved model for processing information faster and more accurately.
 2. An improved filtering process for better context.
+3. An improved UI.
