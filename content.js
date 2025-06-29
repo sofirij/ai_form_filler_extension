@@ -89,11 +89,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         const inputs = request.inputs;
         const classifications = request.classifications;
 
-        // for options we already have a possible answer to pick the best option
-        // send request to ollama
-
-        // loop through inputs for the ones that are select
-
         (async() => {
             // select the best option for the select fields
             const ids = [];
@@ -159,7 +154,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
             console.log("Start filling other fields");
 
-            // fill in the input fields that we have answers to
+            // fill in the text input fields that we have answers to
             for (let i = 0; i < inputs.length; i++) {
                 if (inputs[i].tag !== "select") {
                     console.log("Filling other fields");

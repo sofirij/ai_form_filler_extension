@@ -140,21 +140,8 @@ document.addEventListener("DOMContentLoaded", function() {
 			inputs = inputs.data;
 
 
-			// prompt the ai
+			// prompt the model
 			const labels = ["first_name", "middle_name", "last_name", "phone_number", "email", "password", "phone_number", "tel_country_code", "street_address", "postal_code", "city", "province", "country", "username"]
-
-
-			/*
-			const prompt = JSON.stringify(inputs, null, 2);
-			const response = await fetch("http://localhost:5000/classify", {
-				method: "POST",
-				headers: {"Content-Type": "application/json"},
-				body: JSON.stringify({
-					inputs: inputs,
-					labels: labels
-				})
-			});
-			*/
 
 			const prompt = `Given a list of Objects where each object represents a HTML element, use the attributes of the element to classify the context of the element. Your classification should be one of the following ${JSON.stringify(labels, null, 2)}. Use 'unknown' if you are not sure of the classification.
 			Here is the list of Objects ${JSON.stringify(inputs, null, 2)}. Return a list of your classifications in the same order as the inputs with no additional text. It is possible to have an empty list.`;
@@ -176,9 +163,8 @@ document.addEventListener("DOMContentLoaded", function() {
 				return;
 			}
 
-			const result = await response.json();
-
 			try {
+				const result = await response.json();
 				const input = result.response;
 
 				console.log(input);
