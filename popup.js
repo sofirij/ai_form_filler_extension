@@ -1,34 +1,9 @@
 document.addEventListener("DOMContentLoaded", function() {
 	console.log("DOM loaded");
 
-	const smth = {
-		closest_label: "",
-		closest_legend: "",
-		closest_p: "",
-		closest_span: "",
-		closest_div: "",
-		closest_h1: "",
-		closest_h2: "",
-		closest_h3: "",
-		closest_h4: "",
-		closest_h5: "",
-		closest_h6: "",
-		closest_small: "",
-		closest_em: "",
-		closest_strong: "",
-		closest_li: "",
-		closest_td: "",
-		closest_th: "",
-		closest_caption: "",
-		closest_section: "",
-		closest_article: "",
-		closest_section: "",
-		closest_aside: "",
-		closest_output: "",
-		closest_figcaption: ""
-	};
-
 	let infoPointer = 0;
+
+	// html elements that will take input from user
 	let infoArray = [
 		`
 			<fieldset>
@@ -169,7 +144,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
 				console.log(input);
 				
+				// parse the necessary part in the string (answers are after the </think> tag when using deepseek LLM)
 				const match = input.match(/<\/think>([\s\S]*)/);
+
 				console.log(match);
 				console.log(match[1]);
 

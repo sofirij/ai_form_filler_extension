@@ -1,3 +1,4 @@
+// create a json object of the element with the element's properties as the fields
 function jsonifyHTML(element) {
     const attrs = {};
     for (let attr of element.attributes) {
@@ -72,9 +73,12 @@ function jsonifyHTML(element) {
     return attrs;
 }
 
-// "input[type='text'], input[type='password'], input[type='email'], input[type='tel'], input[type='number'], textarea, select"
+
+// handle messages from popup script
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    // create a json object of inputs that require answers
     if (request.action ===  "readInputs") {
+        // get elements and their corresponding sister elements
         const inputs = Array.from(document.querySelectorAll("input[type='text'], input[type='password'], input[type='email'], textarea, select")).filter(el => {
             return el.offsetParent !== null && getComputedStyle(el) !== "hidden" && !el.disabled && !el.ariaReadOnly;
         });
@@ -85,12 +89,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         sendResponse({ data });
     }
 
+    // fill in read inputs with the stored values
     if (request.action === "writeInputs") {
         const inputs = request.inputs;
         const classifications = request.classifications;
 
         (async() => {
-            // select the best option for the select fields
+            // choose the best option for the select fields
             const ids = [];
             const selectFieldValues = [];
             const selectFieldOptions = [];
@@ -107,6 +112,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 }
             }
 
+            // prompt the LLM
             if (selectFieldValues.length > 0) {
                 const prompt = `Given a list of values and a list of list of options i want you to determine which option in the list of options best matches the corresponding value. The index of a value corresponds to the index of a list of options that should be mapped. Return a list of corresponding options that best matches the values in the same order without any additional text.
                 Here is the list of values ${JSON.stringify(selectFieldValues, null, 2)}. Here is the list of options ${JSON.stringify(selectFieldOptions, null, 2)}. Return a properly formatted list.`;
@@ -126,11 +132,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
                 console.log("Response received");
 
+                // fill in the select fields
                 if (response.ok) {
                     try {
+
                         const result = await response.json();
                         const ollamaResponse = result.response;
                         console.log(ollamaResponse);
+                        
+                        // parse the necessary part in the string (answers are after the </think> tag when using deepseek LLM)
                         const match = ollamaResponse.match(/<\/think>([\s\S]*)/);
                         console.log(match);
                         console.log(match[1]);
